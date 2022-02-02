@@ -1,0 +1,21 @@
+
+
+body {
+    /* font-family: 'Open Sans Condensed', sans-serif;
+    font-family: 'Indie Flower', cursive;
+    font-family: 'Fredoka One', cursive; */
+    font-family: 'Indie Flower', cursive;
+    color: white;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: black;
+    display: flex;
+    justify-content: center;
+}
+
+.main-heading{
+    font-size: 50px;
+    width: 550px;
+}
+
