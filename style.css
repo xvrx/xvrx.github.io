@@ -49,6 +49,24 @@ body {
     width: 50px;
 }
 
+.buttons button{
+    color: white;
+    /* padding: 0; */
+    border: 2px white solid;
+    border-radius: 10px;
+    background: none;
+    cursor: pointer;
+}
+
+.buttons button:hover{
+    color: rgb(241, 255, 39);
+    border: 2px rgb(241, 255, 39) solid;
+}
+
+.buttons button:active{
+    transform: scale(0.90);
+}
+
 h1 {
     font-size: var(--heading);
 }
