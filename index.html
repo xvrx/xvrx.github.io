@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>God hates us all!</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="https://avatars.githubusercontent.com/u/85608673?s=400&u=c2ee040195b1c9c08fdb687e9461b202a9b86cd2&v=4"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- <link rel="stylesheet" href="./blog.css"> -->
+    <style>
+      :root {
+        box-sizing: border-box;
+        line-height: 1.5;
+        font-weight: 400;
+        color-scheme: light dark;
+        color: rgba(255, 255, 255, 0.87);
+        background-color: #2b2f5a;
+        background-color: #1a1b26;
+        font-size: 1em;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      #scene-container {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+      .page-wrapper{
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        /* justify-content: center; */
+        position: absolute;
+      }
+
+   
+
+      html {
+        width: 100%;
+        height: 100vh;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        overflow-x: hidden;
+        font-family: "Merriweather", Inter, system-ui, Avenir, Helvetica, Arial,
+          sans-serif;
+      }
+
+      #justify-text {
+        text-align: justify;
+      }
+
+      a {
+        font-family: Inter, "Montserrat", "Merriweather";
+        cursor: pointer;
+        font-weight: 500;
+        color: #646cff;
+        text-decoration: inherit;
+      }
+
+      main {
+        font-size: 1rem;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        place-items: center;
+        margin: 150px 0 15px 0;
+        width: 100%;
+      }
+
+      .main-header {
+        text-align: start;
+        max-width: 850px;
+        margin: 0 10px 0 10px;
+      }
+
+      .card {
+        display: flex;
+        justify-content: center;
+      }
+
+      .parsed-wrapper {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      }
+
+      .footer p {
+        color: rgba(255, 255, 255, 0.497);
+      }
+
+      .footer {
+        font-size: 0.75rem;
+        margin-top: 50px;
+        margin-bottom: 10px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        place-items: center;
+      }
+
+      button {
+        border-radius: 8px;
+        border: 1px solid transparent;
+        padding: 0.6em 1.2em;
+        font-size: 1em;
+        font-weight: 500;
+        font-family: inherit;
+        background-color: #322e45;
+        cursor: pointer;
+        transition: border-color 0.25s;
+      }
+      button:hover {
+        border-color: #646cff;
+      }
+      button:focus,
+      button:focus-visible {
+        outline: 4px auto -webkit-focus-ring-color;
+      }
+
+      .profile-wrapper {
+        display: flex;
+        margin-bottom: 2em;
+      }
+      .profile-wrapper img {
+        width: 100px;
+        height: auto;
+      }
+
+      .profile-wrapper h1 {
+        display: flex;
+        align-items: end;
+      }
+
+    a {
+        color: #bb9af7;
+        position: relative;
+        transition: all;
+        overflow: hidden;
+    }
+
+    .layout-link:hover::after {
+        animation: mymove 0.5s forwards;
+        bottom: 0px;
+        left: -40;
+        content: '';
+        width: 100%;
+        opacity: 0;
+        background-color: rgb(255, 90, 90);
+        height: 2px;
+        position: absolute;
+    }
+
+    .link-wrapper  {
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        margin: 1.5rem 0;
+        gap: 3vw;
+    }
+
+    
+
+    @keyframes mymove {
+        from {
+            left: -40px;
+            opacity: 0;
+        }
+        to {
+            left: 0px;
+            opacity: 1;
+        }
+    }
+
+      @media (max-width: 850px) {
+        .main-header {
+          font-size: 0.75rem;
+        }
+        main {
+          margin-top: 20px;
+        }
+
+        .profile-wrapper {
+          display: flex;
+          justify-content: center;
+        }
+        .desc {
+          margin: 0 10px;
+        }
+        .desc h1,
+        .desc p {
+          font-size: medium;
+          text-align: center;
+        }
+
+        .desc h1 {
+          font-size: 2rem;
+        }
+      }
+
+      #list-title {
+        cursor: pointer;
+      }
+
+      #list-title:active {
+        filter: brightness(0.55);
+      }
+    </style>
+  </head>
+
+  <body>
+      <div id="scene-container"></div>
+        <div class="page-wrapper">
+          <div class="link-wrapper svelte-1klmgyt" data-svelte-h="svelte-3mwoip">
+            <a data-sveltekit-preload-data="off" href="/" class="svelte-1klmgyt layout-link"
+              > <strong>Home</strong> </a
+            >
+            <a
+              data-sveltekit-preload-data="off"
+              href="/about"
+              class="svelte-1klmgyt layout-link"
+              >About</a
+            >
+            <a data-sveltekit-preload-data="off" href="/blog" class="svelte-1klmgyt layout-link"
+              >Blog</a
+            >
+          </div>
+          <main data-svelte-h="svelte-rxofh5">
+            <div class="main-header">
+              <div class="profile-wrapper">
+                <img
+                  src="https://avatars.githubusercontent.com/u/85608673?s=400&u=c2ee040195b1c9c08fdb687e9461b202a9b86cd2&v=4"
+                  alt="Profile"
+                />
+              </div>
+              <div class="desc">
+                <h1>What gives me hope?</h1>
+                <br/>
+                <p>
+                  <strong>Uhh, about 11 sir...</strong> 
+                </p>
+                <br />
+                <p id="justify-text">
+                  i feel most relatable with the centurion in this <a href="https://www.youtube.com/watch?v=kx_G2a2hL6U&t=20s">comedy skit</a>
+                  "life of brian", i've been watching it over and over again for almost a decade now.
+                  <br/>
+                  it's so funny and makes me don't wanna die. 👉🤓👈
+                  <br /><br />
+                  i am also schizophrenic, you can find out by reading <a href="/blog">my blog.</a>
+                </p>
+              </div>
+            </div>
+          </main>
+        </div>
+    
+
+      <script>
+        document.querySelectorAll("a").forEach(function(link) {
+            link.addEventListener("click", function(event) {
+                if (this.href === window.location.href) {
+                    event.preventDefault();  // Prevent the default action of the link
+                }
+            });
+        });
+
+
+        let scene, camera, renderer, face;
+
+        function init() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setClearColor(0x1a1b26)
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.getElementById('scene-container').appendChild(renderer.domElement);
+
+            const geometry = new THREE.SphereGeometry(5, 15, 10);
+            const material = new THREE.MeshBasicMaterial({ color: 0x2b2f5a, wireframe: true });
+            face = new THREE.Mesh(geometry, material);
+            scene.add(face);
+
+            camera.position.z = 3;
+
+            window.addEventListener('resize', onWindowResize, true);
+
+            animate();
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            face.rotation.y -= 0.005;
+            face.rotation.x -= 0.005;
+            renderer.render(scene, camera);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        init();
+      </script>
+    </div>
+  </body>
+</html>
