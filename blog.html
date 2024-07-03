@@ -19,8 +19,37 @@
       rel="stylesheet"
     />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- <link rel="stylesheet" href="./blog.css"> -->
     <style>
+
+        @media (max-width: 850px) {
+          .main-header {
+            font-size: 0.75rem;
+          }
+          main {
+            margin-top: 20px;
+          }
+      
+          .profile-wrapper {
+            display: flex;
+            justify-content: center;
+          }
+          .desc h1,
+          .desc p {
+            font-size: medium;
+            text-align: center;
+          }
+
+          .desc h1 {
+            font-size: 2rem;
+          }
+
+              
+          .main-wrapper .link-wrapper  {
+            gap: 20vw;
+          }
+        
+      }
+
       :root {
         box-sizing: border-box;
         line-height: 1.5;
@@ -99,6 +128,8 @@
         place-items: center;
       }
 
+   
+
       button {
         border-radius: 8px;
         border: 1px solid transparent;
@@ -137,29 +168,7 @@
         color: rgb(255, 127, 76);
       }
 
-      @media (max-width: 850px) {
-        .main-header {
-          font-size: 0.75rem;
-        }
-        main {
-          margin-top: 20px;
-        }
-
-        .profile-wrapper {
-          display: flex;
-          justify-content: center;
-        }
-        .desc h1,
-        .desc p {
-          font-size: medium;
-          text-align: center;
-        }
-
-        .desc h1 {
-          font-size: 2rem;
-        }
-      }
-
+      
       #list-title {
         cursor: pointer;
       }
@@ -167,11 +176,19 @@
       #list-title:active {
         filter: brightness(0.55);
       }
+      
+      .link-wrapper  {
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        margin: 1.5rem 0;
+        gap: 3vw;
+    }
     </style>
   </head>
   <body data-sveltekit-preload-data="hover">
-    <div style="display: contents">
-      <div class="link-wrapper svelte-1klmgyt" data-svelte-h="svelte-3mwoip">
+    <div class="main-wrapper" style="display: contents">
+      <div class="link-wrapper" data-svelte-h="svelte-3mwoip">
         <a data-sveltekit-preload-data="off" href="/" class="svelte-1klmgyt layout-link"
           >Home</a
         >
@@ -195,7 +212,7 @@
             />
             <div class="head-desc svelte-wjehi6">
               <h2>The Holy Bullshitology</h2>
-              <span>emang lu doang? gw juga bisa nulis</span>
+              <span>Evidence based? nigga just write whatever u want 🥸</span>
             </div>
           </div>
 
@@ -328,14 +345,6 @@
         position: absolute;
     }
 
-    .link-wrapper  {
-        display: flex;
-        width: 100%;
-        justify-content: center;
-        margin: 1.5rem 0;
-        gap: 3vw;
-    }
-
     @keyframes mymove {
         from {
             left: -40px;
@@ -347,15 +356,6 @@
         }
     }
 
-        @media (max-width: 850px) {
-         .header{
-          margin-top: 2em;
-        }
-    
-        .head-desc{
-            border-left: 0.5em;
-        }
-       }
     
     </style>
     </div>
