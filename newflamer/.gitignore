@@ -1,0 +1,19 @@
+# abandoned earlier prototype (contains its own node_modules/.next)
+/ngibul/
+
+# dependencies
+/node_modules
+
+# next.js
+/.next/
+/out/
+
+# generated blog assets (collected from content/ at build time)
+/public/blog/
+
+# env
+.env*.local
+
+# misc
+*.tsbuildinfo
+next-env.d.ts

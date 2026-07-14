@@ -1,0 +1,31 @@
+{
+  "name": "newflamer",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "predev": "node scripts/collect-assets.mjs",
+    "dev": "next dev",
+    "prebuild": "node scripts/collect-assets.mjs",
+    "build": "next build",
+    "start": "serve out -l 3000",
+    "preview": "npm run build && npm run start"
+  },
+  "dependencies": {
+    "@types/animejs": "^3.1.13",
+    "@types/three": "^0.185.1",
+    "animejs": "^3.2.2",
+    "gray-matter": "^4.0.3",
+    "marked": "^15.0.7",
+    "next": "^15.3.3",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "three": "^0.185.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.21",
+    "@types/react": "^19.1.5",
+    "@types/react-dom": "^19.1.5",
+    "serve": "^14.2.4",
+    "typescript": "^5.8.3"
+  }
+}

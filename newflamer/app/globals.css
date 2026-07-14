@@ -1,0 +1,1212 @@
+/* ————————————————————————————————————————————————
+   BEYOND ENTROPY — field-dossier design system
+   Palette: Tokyo Night, inherited from the old site
+   ———————————————————————————————————————————————— */
+
+:root {
+  --ink: #14151d;
+  --ink-2: #1a1b26;
+  --ink-3: #24283b;
+  --line: #2e3147;
+  --text: #e4e5f1;
+  --text-2: #a9adc9;
+  --text-3: #6a6f8e;
+  --violet: #bb9af7;
+  --red: #ff5a5a;
+  --amber: #e0af68;
+  --green: #9ece6a;
+  --blue: #7aa2f7;
+  /* translucent panel base (rgb triplet, used with alpha) */
+  --panel-rgb: 20, 21, 29;
+  --quote-text: rgb(66, 192, 255);
+  --quote-bg: rgba(2, 129, 255, 0.093);
+
+  color-scheme: dark;
+}
+
+/* light theme — Tokyo Night Day-ish, toggled from the nav rail */
+:root[data-theme="light"] {
+  --ink: #e3e4ea;
+  --ink-2: #d8dae3;
+  --ink-3: #c9ccdb;
+  --line: #b0b4c8;
+  --text: #2e3352;
+  --text-2: #4d547a;
+  --text-3: #7d84a5;
+  --violet: #7847bd;
+  --red: #c93a4e;
+  --amber: #8f5e15;
+  --green: #587539;
+  --blue: #2e7de9;
+  --panel-rgb: 243, 244, 249;
+  --quote-text: #2361b8;
+  --quote-bg: rgba(46, 125, 233, 0.08);
+
+  color-scheme: light;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--ink);
+  color: var(--text);
+  font-family: var(--font-body), Georgia, serif;
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+::selection {
+  background: #272782;
+  color: #18d8ff;
+}
+
+a {
+  color: var(--violet);
+  text-decoration: none;
+}
+
+:focus-visible {
+  outline: 2px dashed var(--violet);
+  outline-offset: 3px;
+}
+
+.eyebrow {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  color: var(--text-2);
+}
+
+.eyebrow-red {
+  color: var(--red);
+}
+
+.eyebrow-sep {
+  margin: 0 0.6em;
+  color: var(--text-3);
+}
+
+/* ———— header ———— */
+
+.site-header {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.1rem clamp(1rem, 4vw, 2.5rem);
+  background: linear-gradient(
+    to bottom,
+    rgba(var(--panel-rgb), 0.88),
+    transparent
+  );
+}
+
+.wordmark {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.wordmark-sigil {
+  color: var(--red);
+}
+
+/* ———— navigation rail (sticky, mid-left) ———— */
+
+.nav-rail {
+  position: fixed;
+  left: 0; /* flush with the viewport edge */
+  top: 50%;
+  translate: 0 -50%;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  /* each chip sizes to its own content — without this, flex stretches
+     every chip to the widest one, so hovering one extended them all */
+  align-items: flex-start;
+  gap: 0.7rem;
+}
+
+.rail-link {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 0.65rem 0.7rem;
+  color: var(--text-3); /* inactive: clearly muted */
+  background: rgba(var(--panel-rgb), 0.72);
+  border: 1px solid var(--line);
+  border-left: none; /* the rail sits on the edge */
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  font: inherit;
+  transition: color 0.45s ease, border-color 0.45s ease,
+    background 0.45s ease, padding-left 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* icon-only by default; hovering extends the chip out of the edge */
+.rail-link:hover {
+  color: var(--text);
+  border-color: var(--violet);
+  background: rgba(187, 154, 247, 0.1);
+  padding-left: 1rem;
+}
+
+.rail-link.is-active {
+  color: var(--text-2);
+  border-color: rgba(255, 90, 90, 0.55);
+  box-shadow: inset 3px 0 0 var(--red);
+}
+
+.rail-link svg {
+  flex: none;
+  color: currentColor; /* inactive icons inherit the muted grey */
+  transition: transform 0.55s cubic-bezier(0.34, 1.3, 0.64, 1),
+    color 0.45s ease;
+}
+
+.rail-link:hover svg {
+  transform: translateY(-2px) scale(1.08);
+  color: var(--violet);
+}
+
+.rail-link.is-active svg {
+  color: var(--red);
+}
+
+/* label slides open on hover only — at rest the rail is icons alone.
+   The 0fr → 1fr grid track animates the label's TRUE width (no max-width
+   guessing), so motion starts and ends exactly with the transition. */
+.rail-label {
+  display: grid;
+  grid-template-columns: 0fr;
+  margin-left: 0;
+  opacity: 0;
+  /* exit order: text fades first, then the track collapses */
+  transition: grid-template-columns 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.06s,
+    margin-left 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.06s,
+    opacity 0.22s ease;
+}
+
+.rail-label-in {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  transform: translateX(-6px);
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.rail-link:hover .rail-label,
+.rail-link:focus-visible .rail-label {
+  grid-template-columns: 1fr;
+  margin-left: 0.7rem;
+  opacity: 1;
+  /* enter order: track opens first, text fades in behind it */
+  transition: grid-template-columns 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    margin-left 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.4s ease 0.12s;
+}
+
+.rail-link:hover .rail-label-in,
+.rail-link:focus-visible .rail-label-in {
+  transform: translateX(0);
+  transition-delay: 0.08s;
+}
+
+/* theme toggle: CSS picks the icon so markup stays theme-agnostic */
+.icon-moon {
+  display: none;
+}
+
+:root[data-theme="light"] .icon-sun {
+  display: none;
+}
+
+:root[data-theme="light"] .icon-moon {
+  display: block;
+}
+
+/* icons redraw themselves on hover */
+.icon-draw {
+  stroke-dasharray: 70;
+  stroke-dashoffset: 0;
+}
+
+.rail-link:hover .icon-draw {
+  animation: icon-draw 1s cubic-bezier(0.45, 0, 0.25, 1) forwards;
+}
+
+.rail-link:hover .icon-draw-2 {
+  animation-delay: 0.12s;
+}
+
+.rail-link:hover .icon-draw-3 {
+  animation-delay: 0.24s;
+}
+
+@keyframes icon-draw {
+  from {
+    stroke-dashoffset: 70;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ———— route-transition veil ———— */
+
+.veil {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: var(--ink);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.8s ease;
+}
+
+/* the heritage underline sweep, kept for in-text links */
+.markdown a:hover::after,
+.post-return a:hover::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  height: 2px;
+  width: 100%;
+  background: var(--red);
+  animation: sweep 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes sweep {
+  from {
+    left: -40px;
+    opacity: 0;
+  }
+  to {
+    left: 0;
+    opacity: 1;
+  }
+}
+
+/* ———— home scene ———— */
+
+.home {
+  height: 100svh;
+  position: relative;
+  overflow: hidden;
+}
+
+.scene,
+.scene-map {
+  position: absolute;
+  inset: 0;
+}
+
+.scene-map gmp-map-3d {
+  width: 100%;
+  height: 100%;
+}
+
+.scene-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(to top, rgba(20, 21, 29, 0.75), transparent 38%),
+    radial-gradient(ellipse at center, transparent 55%, rgba(20, 21, 29, 0.55));
+}
+
+/* radar fallback, shown until the satellite feed is live */
+
+.radar {
+  position: absolute;
+  inset: 0;
+  background: var(--ink-2);
+  overflow: hidden;
+}
+
+.radar-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(122, 162, 247, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(122, 162, 247, 0.07) 1px, transparent 1px);
+  background-size: 56px 56px;
+  background-position: center;
+}
+
+.radar-rings {
+  position: absolute;
+  inset: 0;
+  background: repeating-radial-gradient(
+    circle at center,
+    transparent 0 79px,
+    rgba(187, 154, 247, 0.12) 79px 80px
+  );
+}
+
+.radar-sweep {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 160vmax;
+  height: 160vmax;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    rgba(158, 206, 106, 0.16),
+    transparent 70deg,
+    transparent
+  );
+  animation: radar-spin 7s linear infinite;
+}
+
+@keyframes radar-spin {
+  to {
+    rotate: 360deg;
+  }
+}
+
+/* target reticle — building stays dead-center while the camera orbits */
+
+.reticle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  width: min(34vmin, 240px);
+  aspect-ratio: 1;
+  pointer-events: none;
+}
+
+.reticle-bracket {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  border: 2px solid var(--red);
+  opacity: 0.9;
+}
+
+.reticle-bracket.tl { top: 0; left: 0; border-width: 2px 0 0 2px; }
+.reticle-bracket.tr { top: 0; right: 0; border-width: 2px 2px 0 0; }
+.reticle-bracket.bl { bottom: 0; left: 0; border-width: 0 0 2px 2px; }
+.reticle-bracket.br { bottom: 0; right: 0; border-width: 0 2px 2px 0; }
+
+.reticle::before,
+.reticle::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  background: rgba(255, 90, 90, 0.8);
+}
+
+.reticle::before {
+  width: 18px;
+  height: 1px;
+  translate: -50% 0;
+}
+
+.reticle::after {
+  width: 1px;
+  height: 18px;
+  translate: 0 -50%;
+}
+
+.reticle-label {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 50%;
+  translate: -50%;
+  white-space: nowrap;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.24em;
+  color: var(--red);
+  background: rgba(var(--panel-rgb), 0.72);
+  padding: 4px 10px;
+  border: 1px solid rgba(255, 90, 90, 0.35);
+}
+
+/* telemetry readout */
+
+.telemetry {
+  position: absolute;
+  right: clamp(1rem, 3vw, 2.5rem);
+  bottom: clamp(1rem, 3vh, 2rem);
+  display: grid;
+  gap: 2px;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  color: var(--text-2);
+  text-align: right;
+  background: rgba(var(--panel-rgb), 0.62);
+  border: 1px solid var(--line);
+  padding: 10px 14px;
+  backdrop-filter: blur(6px);
+}
+
+.telemetry em {
+  font-style: normal;
+  color: var(--amber);
+  margin-right: 0.75em;
+}
+
+.telemetry-note {
+  margin-top: 6px;
+  color: var(--text-3);
+  max-width: 26ch;
+  letter-spacing: 0.04em;
+}
+
+/* dossier card */
+
+.dossier {
+  position: absolute;
+  z-index: 5;
+  left: clamp(1rem, 4vw, 2.5rem);
+  bottom: clamp(1rem, 5vh, 3rem);
+  max-width: 480px;
+  padding: 1.75rem 1.9rem;
+  background: rgba(var(--panel-rgb), 0.82);
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--violet);
+  backdrop-filter: blur(10px);
+}
+
+.dossier h1 {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.7rem, 3.4vw, 2.4rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  margin: 0.7rem 0 0.9rem;
+}
+
+.dossier h1 em {
+  font-style: italic;
+  color: var(--violet);
+}
+
+.dossier-body {
+  color: var(--text-2);
+  font-size: 0.95rem;
+  max-width: 42ch;
+}
+
+.dossier-body a {
+  border-bottom: 1px solid rgba(187, 154, 247, 0.4);
+}
+
+.dossier-body a:hover {
+  color: var(--red);
+  border-bottom-color: var(--red);
+}
+
+.dossier-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.4rem;
+}
+
+.cta {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--violet);
+  padding: 0.65em 1.2em;
+  transition: background 0.45s ease, color 0.45s ease, border-color 0.45s ease;
+}
+
+.cta:hover {
+  background: var(--red);
+}
+
+.cta-ghost {
+  color: var(--text-2);
+  background: transparent;
+  border: 1px solid var(--line);
+}
+
+.cta-ghost:hover {
+  background: transparent;
+  color: var(--text);
+  border-color: var(--violet);
+}
+
+.cta-arrow {
+  display: inline-block;
+  transition: transform 0.55s cubic-bezier(0.34, 1.3, 0.64, 1);
+}
+
+.cta:hover .cta-arrow {
+  transform: translate(3px, -3px);
+}
+
+.dossier-operator img {
+  transition: filter 0.55s ease, transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.dossier-operator:hover img {
+  filter: grayscale(0);
+  transform: scale(1.06);
+}
+
+.dossier-operator {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding-top: 1.1rem;
+  border-top: 1px dashed var(--line);
+}
+
+.dossier-operator img {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--line);
+  filter: grayscale(0.35);
+}
+
+.operator-name,
+.operator-role {
+  display: block;
+  font-family: var(--font-mono), monospace;
+  letter-spacing: 0.14em;
+}
+
+.operator-name {
+  font-size: 0.6875rem;
+  color: var(--text);
+}
+
+.operator-role {
+  font-size: 0.625rem;
+  color: var(--text-3);
+}
+
+/* ———— inner pages ———— */
+
+.page {
+  flex: 1;
+  width: 100%;
+  max-width: 780px;
+  margin: 0 auto;
+  padding: clamp(7rem, 14vh, 9rem) clamp(1.1rem, 4vw, 2rem) 4rem;
+}
+
+.page-narrow {
+  max-width: 720px;
+}
+
+.index-header h1 {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(2.4rem, 6vw, 3.4rem);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.05;
+  margin: 0.5rem 0 0.4rem;
+}
+
+.index-sub {
+  color: var(--text-3);
+  font-style: italic;
+  margin-bottom: 3rem;
+}
+
+.cat-group {
+  margin-bottom: 2.75rem;
+}
+
+.cat-label {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--amber);
+  display: flex;
+  align-items: center;
+  gap: 0.7em;
+  margin-bottom: 0.4rem;
+}
+
+.cat-mark {
+  color: var(--text-3);
+}
+
+.cat-label::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, var(--line), transparent);
+}
+
+.filings {
+  list-style: none;
+}
+
+.filing {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1.25rem;
+  align-items: baseline;
+  padding: 1.4rem 0.9rem;
+  border-bottom: 1px solid var(--line);
+  border-left: 2px solid transparent;
+  color: inherit;
+  transition: background 0.6s ease, border-left-color 0.6s ease,
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.filing:hover {
+  background: rgba(187, 154, 247, 0.05);
+  border-left-color: var(--violet);
+  transform: translateX(6px);
+}
+
+.filing-title {
+  display: inline-block;
+  position: relative;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.35rem;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--violet);
+  padding-left: 0;
+  transition: color 0.6s ease,
+    padding-left 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* no underline here anymore — a marker slides the title open instead */
+.filing-title::before {
+  content: "▸";
+  position: absolute;
+  left: -2px;
+  opacity: 0;
+  color: var(--red);
+  transition: opacity 0.6s ease, left 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.filing:hover .filing-title {
+  color: var(--text);
+  padding-left: 1.15em;
+}
+
+.filing:hover .filing-title::before {
+  opacity: 1;
+  left: 0;
+}
+
+.filing-desc {
+  display: block;
+  margin-top: 0.4rem;
+  font-size: 0.9rem;
+  color: var(--text-2);
+  max-width: 52ch;
+}
+
+.filing-date {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  color: var(--text-2);
+  white-space: nowrap;
+}
+
+.filing-date em {
+  font-style: normal;
+  color: var(--text-3);
+  margin-right: 0.6em;
+}
+
+/* ———— post ———— */
+
+.post-topbar {
+  margin-bottom: 2.5rem;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  color: var(--text-2);
+  border: 1px solid var(--line);
+  padding: 0.6em 1.1em;
+  background: rgba(var(--panel-rgb), 0.6);
+  transition: color 0.45s ease, border-color 0.45s ease,
+    background 0.45s ease;
+}
+
+.back-btn:hover {
+  color: var(--text);
+  border-color: var(--violet);
+  background: rgba(187, 154, 247, 0.08);
+}
+
+.back-arrow {
+  display: inline-block;
+  transition: transform 0.55s cubic-bezier(0.34, 1.3, 0.64, 1);
+}
+
+.back-btn:hover .back-arrow {
+  transform: translateX(-4px);
+}
+
+.post-header {
+  margin-bottom: 2.25rem;
+}
+
+.post-header h1 {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.9rem, 5vw, 2.8rem);
+  font-weight: 500;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  margin-top: 0.8rem;
+  color: var(--text);
+}
+
+.post-return {
+  margin-top: 3.5rem;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+}
+
+.post-return a {
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 3px;
+}
+
+/* markdown body — heading hues carried over from the old markdown.css */
+
+.markdown {
+  color: #c9cde3;
+}
+
+.markdown h1,
+.markdown h2,
+.markdown h3,
+.markdown h4 {
+  font-family: var(--font-display), Georgia, serif;
+  font-weight: 600;
+  line-height: 1.25;
+  margin: 2rem 0 0.6rem;
+}
+
+.markdown h1 { color: var(--violet); font-size: 1.7rem; }
+.markdown h2 { color: var(--amber); font-size: 1.4rem; }
+.markdown h3 { color: var(--green); font-size: 1.2rem; }
+.markdown h4 { color: var(--blue); font-size: 1.05rem; }
+
+.markdown p {
+  margin-bottom: 1.1rem;
+  text-indent: 1.75em;
+}
+
+/* captions, quotes and lead-ins read better unindented */
+.markdown blockquote p,
+.markdown li p {
+  text-indent: 0;
+}
+
+.markdown a {
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 2px;
+}
+
+.markdown blockquote {
+  margin: 1.5rem 0;
+  padding: 0.9rem 1.2rem;
+  color: var(--quote-text);
+  background: var(--quote-bg);
+  border-left: 0.25em solid rgba(46, 125, 233, 0.5);
+}
+
+.markdown blockquote p {
+  margin-bottom: 0.4rem;
+}
+
+.markdown blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+.markdown img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1.5rem auto;
+  border: 1px solid var(--line);
+}
+
+.markdown iframe {
+  max-width: 100%;
+  border: 1px solid var(--line);
+}
+
+.markdown ul,
+.markdown ol {
+  padding-left: 2em;
+  margin-bottom: 1.1rem;
+}
+
+.markdown pre {
+  background: var(--ink-3);
+  padding: 1rem;
+  overflow: auto;
+  line-height: 1.5;
+  margin-bottom: 1.1rem;
+  border: 1px solid var(--line);
+}
+
+.markdown code {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.85em;
+  background: var(--ink-3);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+}
+
+.markdown pre code {
+  background: none;
+  padding: 0;
+}
+
+.markdown hr {
+  border: 0;
+  border-top: 1px dashed var(--line);
+  margin: 2rem 0;
+}
+
+.markdown table {
+  border-collapse: collapse;
+  margin-bottom: 1.1rem;
+}
+
+.markdown th,
+.markdown td {
+  border: 1px solid var(--line);
+  padding: 6px 13px;
+}
+
+/* ———— 404 ———— */
+
+.notfound {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.notfound h1 {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(5rem, 18vw, 9rem);
+  font-weight: 600;
+  line-height: 1;
+}
+
+.notfound-sub {
+  color: var(--text-2);
+  font-style: italic;
+}
+
+.stamp {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  color: var(--red);
+  border: 2px solid var(--red);
+  padding: 0.5em 1.1em;
+  rotate: -4deg;
+  opacity: 0.85;
+}
+
+/* ———— typer + scroll hint ———— */
+
+.typer-em {
+  font-style: italic;
+  color: var(--violet);
+}
+
+.typer-caret {
+  display: inline-block;
+  width: 0.55em;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  background: var(--red);
+  animation: caret-blink 1.1s ease-in-out infinite;
+}
+
+.typer-caret-done {
+  animation: caret-fade 0.9s ease forwards;
+}
+
+@keyframes caret-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.12;
+  }
+}
+
+@keyframes caret-fade {
+  to {
+    opacity: 0;
+  }
+}
+
+.scroll-hint {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(0.9rem, 2.5vh, 1.6rem);
+  translate: -50%;
+  z-index: 5;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.3em;
+  /* sits over the always-dark 3D scene, so it doesn't follow the theme */
+  color: #9aa0bd;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.scroll-hint-chevron {
+  display: inline-block;
+  color: var(--red);
+  animation: chevron-drop 2.4s ease-in-out infinite;
+}
+
+@keyframes chevron-drop {
+  0%,
+  100% {
+    transform: translateY(-2px);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateY(3px);
+    opacity: 1;
+  }
+}
+
+/* ———— footer ———— */
+
+.site-footer {
+  display: flex;
+  justify-content: center;
+  gap: 0.75em;
+  padding: 2rem 1rem;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  color: var(--text-3);
+  border-top: 1px solid var(--line);
+}
+
+/* ———— responsive ———— */
+
+@media (max-width: 900px) {
+  /* the rail docks to the bottom as a pill; labels stay open (no hover) */
+  .nav-rail {
+    left: 50%;
+    top: auto;
+    bottom: 0.9rem;
+    translate: -50% 0;
+    flex-direction: row;
+    gap: 0.6rem;
+  }
+
+  .rail-link {
+    border-left: 1px solid var(--line);
+  }
+
+  .rail-link:hover {
+    padding-left: 0.7rem;
+  }
+
+  .rail-label {
+    grid-template-columns: 1fr;
+    opacity: 1;
+    margin-left: 0.7rem;
+  }
+
+  .rail-label-in {
+    transform: translateX(0);
+  }
+
+  .page {
+    padding-bottom: 6.5rem;
+  }
+
+  /* keep the bottom rail clear of the home dossier card */
+  .home .scroll-hint {
+    display: none;
+  }
+
+  .home .dossier {
+    bottom: 4.5rem;
+  }
+}
+
+@media (max-width: 720px) {
+  .site-header {
+    padding-top: 0.9rem;
+  }
+
+  .wordmark {
+    font-size: 0.65rem;
+  }
+
+  .dossier {
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    max-width: none;
+    padding: 1.3rem 1.2rem;
+  }
+
+  .telemetry {
+    right: 0.75rem;
+    top: 4.5rem;
+    bottom: auto;
+    font-size: 0.5625rem;
+    padding: 8px 10px;
+  }
+
+  .reticle {
+    translate: -50% -70%;
+  }
+
+  .filing {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+  }
+
+  .filing-date {
+    order: -1;
+  }
+}
+
+/* ———— entrance choreography gates ————
+   Hidden only when JS is present (html.js set inline in the layout);
+   anime.js timelines in components/reveals.tsx bring them in. */
+
+/* typer-bearing elements (.dossier h1, .dossier-body, .index-sub) are
+   never gated: their entrance is the typewriter animation itself */
+html.js .scene,
+html.js .reticle-bracket,
+html.js .reticle-label,
+html.js .telemetry,
+html.js .scroll-hint,
+html.js .dossier > *:not(h1):not(.dossier-body),
+html.js .index-header > *:not(.index-sub),
+html.js .cat-label,
+html.js .filings li,
+html.js .post-topbar,
+html.js .post-header > *,
+html.js .markdown,
+html.js .post-return {
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+/* ———— reduced motion ———— */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  /* timelines never run — everything stays visible */
+  html.js .scene,
+  html.js .reticle-bracket,
+  html.js .reticle-label,
+  html.js .telemetry,
+  html.js .scroll-hint,
+  html.js .dossier > *:not(h1):not(.dossier-body),
+  html.js .index-header > *:not(.index-sub),
+  html.js .cat-label,
+  html.js .filings li,
+  html.js .post-topbar,
+  html.js .post-header > *,
+  html.js .markdown,
+  html.js .post-return {
+    opacity: 1;
+    will-change: auto;
+  }
+
+  html.js .reticle-bracket {
+    opacity: 0.9;
+  }
+
+  .radar-sweep,
+  .scroll-hint-chevron,
+  .typer-caret {
+    animation: none;
+  }
+
+  .rail-link:hover .icon-draw {
+    animation: none;
+  }
+
+  .nav-rail,
+  .rail-link,
+  .rail-label,
+  .rail-label-in,
+  .veil,
+  .back-btn,
+  .back-arrow,
+  .filing,
+  .filing-title,
+  .filing-title::before {
+    transition: none;
+  }
+
+  .markdown a:hover::after,
+  .post-return a:hover::after {
+    animation: none;
+    left: 0;
+    opacity: 1;
+  }
+}

@@ -14,7 +14,7 @@
   
     .markdown p::selection  {
       color: rgb(24, 216, 255);
-      background-color: rgb(39, 39, 130);
+      background-color: #272782;
       }
     
     .markdown h1,
